@@ -1,5 +1,6 @@
 
 #THIS LINK EXPLAINS THE BELOW CODE IT IS A TUTORIAL ON HOW TO CREATE A VPC, SUBNET, SECURITY GROUP, AND NETWORK ACL
+#https://medium.com/@brad.simonin/create-an-aws-vpc-and-subnet-using-terraform-d3bddcbbcb6
 
 # vpc.tf 
 # Create VPC/Subnet/Security Group/ACL
