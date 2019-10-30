@@ -2,6 +2,7 @@ The below infomartion is the various parameters that can be specified for the EC
 sone for our project. 
 
 # aws_instance.test:
+
 resource "aws_instance" "test" {
     ami                          = "ami-06d51e91cea0dac8d"
     arn                          = "arn:aws:ec2:us-west-2:342283246872:instance/i-02b91c4ef30489fd5"
@@ -18,23 +19,23 @@ resource "aws_instance" "test" {
     ipv6_address_count           = 0
     ipv6_addresses               = []
     monitoring                   = false
-    primary_network_interface_id = "eni-0e12637b1a8cc0c0a"                                    (Still needs to be specified)
-    private_dns                  = "ip-172-31-19-120.us-west-2.compute.internal"              (Still needs to be specified)
-    private_ip                   = "172.31.19.120"                                            (Still needs to be specified)
-    public_dns                   = "ec2-52-89-100-50.us-west-2.compute.amazonaws.com"         (Still needs to be specified)
-    public_ip                    = "52.89.100.50"                                             (Still needs to be specified)
-    security_groups              = [                                                          (Still needs to be specified)
-        "default",      
+    primary_network_interface_id = "NEED TO SPECIFY"
+    private_dns                  = "NEED TO SPECIFY"
+    private_ip                   = "NEED TO SPECIFY"
+    public_dns                   = "NEED TO SPECIFY"
+    public_ip                    = "NEED TO SPECIFY"
+    security_groups              = [
+        "NEED TO SPECIFY",
     ]
     source_dest_check            = true
-    subnet_id                    = "subnet-5229362b"                                          (Still needs to be specified)
-    tags                         = {                                                          (Still needs to be specified)
-        "Name" = "testserverJD"   
+    subnet_id                    = " NEED TO SPECIFY "
+    tags                         = {
+        "Name" = " NEED TO SPECIFY "
     }
     tenancy                      = "default"
     volume_tags                  = {}
-    vpc_security_group_ids       = [                                                          (Still needs to be specified) 
-        "sg-7b8f2638",
+    vpc_security_group_ids       = [
+        " NEED TO SPECIFY",
     ]
 
     credit_specification {
