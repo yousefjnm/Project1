@@ -1,0 +1,21 @@
+provider "aws" {
+  profile       = "default"
+  region        = "us-west-2"
+}
+
+resource "aws_instance" "test" {
+  ami           = "ami-06d51e91cea0dac8d"
+  instance_type = "t2.micro"
+  subnet_id     = "subnet-07a05bda4b4e7e47a"
+  associate_public_ip_address  = true
+  availability_zone     = "us-west-2b"
+  key_name      = "newInstanceKey"
+
+  tags = {
+    Name = "testserverJD3"
+}
+
+  vpc_security_group_ids       = [
+        "sg-09f759592abb95ad6",
+    ]
+}
