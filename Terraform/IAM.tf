@@ -1,3 +1,4 @@
+
 terraform {
     backend  "s3" {
     region         = "us-west-2"
@@ -6,26 +7,30 @@ terraform {
     dynamodb_table = "tf-state-lock"
     }
 } 
-
-provider “aws” {
-  region = “us-west-2”
+variable "Stop_ec2" {
+  type = "string"
 }
-resource "aws_iam_policy" "policy" {
-  name        = "s3policy"
-  description = "For lambda function accssesing S3"
-
-  policy = <<EOF
+data "aws_lambda_function" "existing" {
+  function_name = "${var.Stop_ec2}"
+}
+variable "start_stop_EC2" {
+  type = "string"
+}
+data "aws_lambda_function" "existing" {
+  function_name = "${var.start_stop_EC2}"
+}
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "ec2:Describe*"
-      ],
-      "Effect": "Allow",
-      "Resource": "arn:aws:s3:::gitlegionbucket"
-    }
-  ]
-}
-EOF
-}
+   "Version": "2012-10-17",
+   "Statement": [
+       {
+           "Sid": "VisualEditor0",
+           "Effect": "Allow",
+           "Action": [
+               "ec2:DescribeInstances",
+               "ec2:StartInstances",
+               "logs:*",
+               "ec2:StopInstances"
+           ],
+           "Resource": "*"
+       }
+   ]
