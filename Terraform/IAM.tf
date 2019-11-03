@@ -1,48 +1,31 @@
-resource "aws_iam_role" "ec2-role" {
-  name = "ec2-role"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
+terraform {
+    backend  "s3" {
+    region         = "us-west-2"
+    bucket         = "gitlegionbucket"
+    key            = "ec2/terraform.tfstate" 
+    dynamodb_table = "tf-state-lock"
     }
-  ]
-}
-EOF
-}
+} 
 
-resource "aws_iam_instance_profile" "ec2-role"{
-  name = "ec2-role"
-  role = ["${aws_iam_role.ec2-role.name}"]
+provider “aws” {
+  region = “us-west-2”
 }
-
-resource "aws_iam_role_policy" "ec2-role-policy"{
-  name = "ec2-role-policy"
-  role = "${aws_iam_role.ec2-role.id}"
+resource "aws_iam_policy" "policy" {
+  name        = "s3policy"
+  description = "For lambda function accssesing S3"
 
   policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
     {
-        "Effect": "Allow",
-        "Action": [
-          "s3:*"
-        ],
-        "Resource": [
-          "arn:aws:s3:::gitlegionbucket"
-          "arn:aws:s3:::gitlegionbucket/*"
-        ]
-    },
-    {
+      "Action": [
+        "ec2:Describe*"
+      ],
       "Effect": "Allow",
-      "Action": "s3:ListAllMyBuckets",
-      "Resource": "arn:aws:s3:::*"
+      "Resource": "arn:aws:s3:::gitlegionbucket"
     }
   ]
+}
+EOF
+}
