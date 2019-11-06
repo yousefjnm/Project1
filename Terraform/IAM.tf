@@ -1,37 +1,61 @@
-
 terraform {
     backend  "s3" {
     region         = "us-west-2"
     bucket         = "gitlegionbucket"
-    key            = "ec2/terraform.tfstate" 
+    key            = "ec2/terraform.tfstate"
     dynamodb_table = "tf-state-lock"
     }
-} 
-variable "Stop_ec2" {
-  type = "string"
 }
-data "aws_lambda_function" "existing" {
-  function_name = "${var.Stop_ec2}"
-}
-variable "start_stop_EC2" {
-  type = "string"
-}
-data "aws_lambda_function" "existing" {
-  function_name = "${var.start_stop_EC2}"
-}
-{
-   "Version": "2012-10-17",
-   "Statement": [
-       {
-           "Sid": "VisualEditor0",
-           "Effect": "Allow",
-           "Action": [
-               "ec2:DescribeInstances",
-               "ec2:StartInstances",
-               "logs:*",
-               "ec2:StopInstances"
-           ],
-           "Resource": "*"
-       }
-   ]
+
+resource "aws_iam_role" "lambdaRole" {
+  name = "lambdaRole"
+
+  assume_role_policy = <<EOF
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Action": "sts:AssumeRole",
+          "Principal": {
+          "Service": "ec2.amazonaws.com"
+          },
+          "Effect": "Allow",
+          "Sid": ""
+        }
+      ]
     }
+EOF
+}
+
+resource "aws_iam_policy" "policy" {
+  name        = "test-policy"
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:*:*:*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:Start*",
+        "ec2:Stop*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "attach-policies" {
+  role       = "${aws_iam_role.lambdaRole.name}"
+  policy_arn = "${aws_iam_policy.policy.arn}"
+}
