@@ -1,0 +1,96 @@
+#This Playbook sets up and configures the server
+---
+- hosts: webserver
+  tasks:
+      - name: Updating and Upgrading System
+        become: yes
+        apt:
+          force_apt_get: yes
+          update_cache: yes
+          upgrade: dist
+
+      - name: Installing pip, git, and pymysql
+        become: yes
+        apt:
+          name: "{{ packages }}" 
+          state: latest
+          force_apt_get: yes
+        vars:
+          packages:
+             - python-pip
+             - python3-pip
+             - python-pymysql
+             - python3-pymysql
+             - git
+
+      - name: Installs php and dependencies
+        become: yes
+        apt:
+           pkg:
+             - php
+             - php-pdo
+             - php-mbstring
+             - php-tokenizer
+             - php-curl
+             - php-mysql
+             - php-ldap
+             - php-zip
+             - php-fileinfo
+             - php-gd
+             - php-dom
+             - php-bcmath
+           state: latest
+           force_apt_get: yes
+
+      - name: Installing Apache2
+        become: true
+        apt:
+           name: apache2
+           state: latest
+           force_apt_get: yes
+           update_cache: yes
+
+      - name: Starting and Enabling apache2
+        become: yes
+        service:
+              name: apache2
+              enabled: yes
+              state: started
+
+      - name: Installing MariaDB
+        become: yes
+        apt:
+           name: mariadb-server
+           state: latest
+           force_apt_get: yes
+
+      - name: Starting and Enabling MariaDB
+        service:
+              name: mysql
+              enabled: yes
+              state: started
+
+      - name: Securing MariaDB
+        block:
+          - name: Setting Root Password 
+            become: yes
+            mysql_user:
+                  login_unix_socket: /var/run/mysqld/mysqld.sock
+                  name: root
+                  password: "AssetMan"
+                  priv: '*.*:ALL,GRANT'
+                  state: present
+                  host: "{{ item }}"
+            with_items:
+                 - 127.0.0.1
+                 - ::1
+                 - Localhost
+
+          - name: Removing test database
+            become: yes
+            mysql_db:
+                  name: test
+                  login_user: root
+                  login_password: "AssetMan"
+                  login_unix_socket: /var/run/mysqld/mysqld.sock
+                  state: absent
