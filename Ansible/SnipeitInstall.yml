@@ -1,0 +1,117 @@
+#This Playbook Installs Snipe-It (service deployment)
+---
+- hosts: webserver
+  tasks:
+      - name: Creating Snipe-It DB
+        become: yes
+        mysql_db:
+              login_unix_socket: /var/run/mysqld/mysqld.sock
+              name: snipeit_data
+              login_user: root
+              login_password: "AssetMan"
+              state: present
+
+      - name: Creating Snipe-It User
+        become: yes
+        mysql_user:
+              login_unix_socket: /var/run/mysqld/mysqld.sock
+              name: snipeit_user
+              password: "snipes"
+              priv: '*.*:ALL,GRANT'
+              state: present
+              login_user: root
+              login_password: "AssetMan"
+
+      - name: Cloning Snipe-It Repo
+        become: yes
+        git:
+          repo: 'https://github.com/snipe/snipe-it'
+          dest: /var/www/snipe-it
+          force: yes
+
+      - name: Setting permissions for Snipe-It
+        become: yes
+        file:
+           path: /var/www/snipe-it
+           state: directory
+           recurse: yes
+           owner: ubuntu
+           group: ubuntu
+
+      - name: Configuring Snipe-It .env file
+        become: yes
+        copy:
+          src: ./.env
+          dest: /var/www/snipe-it/
+
+      - name: Setting permissions for public directory
+        become: yes
+        file:
+           path: /var/www/snipe-it/public/uploads
+           state: directory
+           recurse: yes
+           owner: www-data
+           group: www-data
+           mode: '0775'
+
+      - name: Setting permissions for storage directory
+        become: yes
+        file:
+           path: /var/www/snipe-it/storage
+           state: directory
+           recurse: yes
+           owner: www-data
+           group: www-data
+           mode: '0775'
+
+      - name: Installing Composer
+        become: yes
+        get_url:
+              url: https://getcomposer.org/installer
+              dest: /var/www/snipe-it
+
+      - name: Running Composer install
+        become: yes
+        command: php installer
+        args:
+          chdir: /var/www/snipe-it
+
+      - name: Installing PHP dependencies via Composer
+        become: yes
+        command: php composer.phar install --no-dev --prefer-source
+        args:
+          chdir: /var/www/snipe-it
+
+      - name: Generating APP_KEY
+        become: yes
+        command: php artisan key:generate  --force
+        args:
+           chdir: /var/www/snipe-it
+
+      - name: Generating virtual host file
+        become: true
+        copy:
+          src: ./snipeit-site.conf
+          dest: /etc/apache2/sites-available/
+
+      - name: Activating configuration
+        become: yes
+        file:
+           src: /etc/apache2/sites-available/snipeit-site.conf
+           dest: /etc/apache2/sites-enabled/snipeit-site.conf
+           owner: root
+           group: root
+           state: link
+
+      - name: Rewriting 
+        become: yes
+        apache2_module:
+                    name: rewrite
+                    state: present
+
+      - name: Restarting apache2
+        become: yes
+        service:
+              name: apache2
+              enabled: yes
+              state: restarted
