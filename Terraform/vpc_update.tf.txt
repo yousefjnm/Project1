@@ -1,0 +1,119 @@
+provider "aws" {
+  region = "us-west-2"
+}
+# Create the VPC
+resource "aws_vpc" "VPC_Official" {
+  cidr_block           = "10.0.0.0/16"
+  instance_tenancy     = "default"
+  enable_dns_support   = "true"
+  enable_dns_hostnames = "true"
+tags = {
+  Name = "VPC_Official"
+  }
+}
+# Create Secondary Cidr
+resource "aws_vpc_ipv4_cidr_block_association" "VPC_second_cidr" {
+  vpc_id                  = "${aws_vpc.VPC_Official.id}"
+  cidr_block              = "10.100.0.0/16"
+}
+# Create Variables to Divide Public and Private Subnets
+variable "subnets_private" {
+  description = "Private subnets"
+  default = ["10.0.16.0/20", "10.0.32.0/20", "10.0.64.0/20"]
+  type = "list"
+}
+variable "subnets_public" {
+  description = "Public subnets"
+  default = ["10.100.0.0/20", "10.100.32.0/20", "10.100.64.0/20"]
+}
+# Create the Subnets
+resource "aws_subnet" "Private" {
+  count            = "${length(var.subnets_private)}"
+  vpc_id           = "${aws_vpc.VPC_Official.id}"
+  cidr_block       = "${var.subnets_private[count.index]}"
+  map_public_ip_on_launch = "true"
+  availability_zone       = "us-west-2a"
+tags = {
+   Name = "Private"
+  }
+}
+resource "aws_subnet" "Public" {
+  count                   = "${length(var.subnets_private)}"
+  vpc_id                  = "${aws_vpc.VPC_Official.id}"
+  cidr_block              = "${var.subnets_public[count.index]}"
+  map_public_ip_on_launch = "true"
+  availability_zone       = "us-west-2a"
+
+tags = {
+   Name = "Public"
+  }
+}
+# Create the Security Group
+resource "aws_security_group" "SG_Official" {
+  vpc_id       = "${aws_vpc.VPC_Official.id}"
+  name         = "SG_Official"
+  description  = "default VPC security group"
+  ingress {
+    cidr_blocks  = ["0.0.0.0/0"]
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+}
+tags = {
+    Name = "SG_Official"
+}
+}
+# Create VPC Network access control list
+resource "aws_network_acl" "ACL_Official" {
+  vpc_id = "${aws_vpc.VPC_Official.id}"
+  subnet_ids = flatten(["aws_subnet.10.100.0.0/20", "aws_subnet.10.100.16.0/20", "aws_subnet.10.100.32.0/20" ])
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 80
+    to_port    = 80
+  }
+tags = {
+    Name = "ACL_Official"
+  }
+}
+# Create the Internet Gateway
+resource "aws_internet_gateway" "IG_Official" {
+  vpc_id = "${aws_vpc.VPC_Official.id}"
+tags = {
+    Name = "IG_Official"
+  }
+}
+# Create the Private Route Table
+resource "aws_route_table" "Route_Table_Private" {
+    vpc_id = "${aws_vpc.VPC_Official.id}"
+tags = {
+        Name = "Route_Table_Private"
+    }
+}
+# Create the Public Route Table
+resource "aws_route_table" "Route_Table_Public" {
+    vpc_id = "${aws_vpc.VPC_Official.id}"
+tags = {
+        Name = "Route_Table_Public"
+    }
+}
+# Create the Internet Access
+resource "aws_route" "My_VPC_Internet_Access" {
+  route_table_id         = "${aws_route_table.Route_Table_Public.id}"
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = "${aws_internet_gateway.IG_Official.id}"
+}
+# Associate the Route Tables with their Proper Subnets
+resource "aws_route_table_association" "My_VPC_Association_Private" {
+    count          = "${length(var.subnets_private)}"
+    subnet_id      = "${element(aws_subnet.Private.*.id, count.index)}"
+    route_table_id = "${aws_route_table.Route_Table_Private.id}"
+}
+resource "aws_route_table_association" "My_VPC_Association_Public" {
+    count          = "${length(var.subnets_public)}"
+    subnet_id      = "${element(aws_subnet.Public.*.id, count.index)}"
+    route_table_id = "${aws_route_table.Route_Table_Public.id}"
+}
