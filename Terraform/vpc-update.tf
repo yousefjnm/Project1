@@ -185,7 +185,7 @@ tags = {
 }
 # Create the Internet Access
 resource "aws_route" "My_VPC_Internet_Access" {
-  route_table_id         = "${aws_route_table.Route_Table.id}"
+  route_table_id         = "${aws_route_table.Route_Table1.id}"
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = "${aws_internet_gateway.IG_Official.id}"
 }
