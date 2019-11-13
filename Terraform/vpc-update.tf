@@ -192,15 +192,15 @@ resource "aws_route" "My_VPC_Internet_Access" {
 # Associate the Route Table with the Subnet
 resource "aws_route_table_association" "My_VPC_Association" {
     subnet_id      = "${aws_subnet.private_1.id}"
-    route_table_id = "${aws_route_table.Route_Table.id}"
+    route_table_id = "${aws_route_table.Route_Table1.id}"
 }
 resource "aws_route_table_association" "My_VPC_Association2" {
     subnet_id      = "${aws_subnet.private_2.id}"
-    route_table_id = "${aws_route_table.Route_Table.id}"
+    route_table_id = "${aws_route_table.Route_Table1.id}"
 }
 resource "aws_route_table_association" "My_VPC_Association3" {
     subnet_id      = "${aws_subnet.private_3.id}"
-    route_table_id = "${aws_route_table.Route_Table.id}"
+    route_table_id = "${aws_route_table.Route_Table1.id}"
 }
 # Create the 2nd Route Table for public subnets
 resource "aws_route_table" "Route_Table2" {
