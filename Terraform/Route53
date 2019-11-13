@@ -1,0 +1,37 @@
+resource "aws_route53_zone" "git_legion_dev" {
+name          = "git-legion.dev."
+#force_destroy = false
+}
+
+resource "aws_route53_record" "alias_route53_record" {
+  zone_id = "${aws_route53_zone.git_legion_dev.zone_id}" # Replace with your zone ID
+  name    = "git-legion.dev" # Replace with your name/domain/subdomain
+  type    = "A"
+
+  alias {
+    name                   = "${aws_alb.webapp_load_balancer.dns_name}"
+    zone_id                = "Z1H1FL5HABSF5"
+    evaluate_target_health = true
+  }
+}
+
+resource "aws_route53_record" "cname_route53_record" {
+  zone_id = "${aws_route53_zone.git_legion_dev.zone_id}" # Replace with your zone ID
+  name    = "git_legion_dev" # Replace with your subdomain, Note: not valid with "apex" domains, e.g. example.com
+  type    = "CNAME"
+  ttl     = "60"
+  records = ["${aws_alb.webapp_load_balancer.dns_name}"]
+}
+
+
+resource "aws_route53_record" "www" {A
+  zone_id = "${aws_route53_zone.git_legion_dev.zone_id}"
+  name    = "git-legion.dev"
+  type    = "A"
+
+  alias {
+    name                   = "${aws_alb.webapp_load_balancer.dns_name}"
+    zone_id                = "Z1H1FL5HABSF5"
+    evaluate_target_health = true
+  }
+}
