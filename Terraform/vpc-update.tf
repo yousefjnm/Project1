@@ -71,7 +71,7 @@ tags = {
    Name = "public_3"
   }
  }
-#variable "cidr_total" {
+variable "cidr_total" {
    type = "list"
    default = ["10.0.16.0/20", "10.0.32.0/20", "10.0.64.0/20", "10.100.0.0/20", "10.100.16.0/20", "10.100.32.0/20" ]
 }
@@ -84,7 +84,7 @@ resource "aws_security_group" "SG_Official" {
     from_port    = 80
     to_port      = 443
     protocol     = "tcp"
-    cidr_blocks  = "10.0.16.0/20" 
+    cidr_blocks  = ["0.0.0.0/0"] 
 }
   egress {
     from_port   = 0
