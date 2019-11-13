@@ -11,9 +11,9 @@ resource "aws_default_vpc" "default" {}
 
 resource "aws_instance" "bastion" {
   ami                         = "ami-969ab1f6"
-  key_name                    = "${aws_key_pair.bastion_key.newInstanceKey}"
+  key_name                    = "newInstanceKey"
   instance_type               = "t2.micro"
-  security_groups             = "["${aws_security_group.bastion-sg.bastion}"]"
+  security_groups             = ["${aws_security_group.bastion-sg.id}"]
   associate_public_ip_address = true
 }
 
@@ -30,8 +30,8 @@ resource "aws_security_group" "bastion-sg" {
 
   egress {
     protocol    = -1
-    from_port   = 0 
-    to_port     = 0 
+    from_port   = 0
+    to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
