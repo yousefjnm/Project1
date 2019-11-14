@@ -3,7 +3,7 @@ provider "aws" {
   region        = "us-west-2"
 }
 
-resource "aws_instance" "test" {
+resource "aws_instance" "WebSrvr" {
   ami           = "ami-06d51e91cea0dac8d"
   instance_type = "t2.micro"
   subnet_id     = "subnet-07a05bda4b4e7e47a"
@@ -13,14 +13,13 @@ resource "aws_instance" "test" {
   key_name      = "newInstanceKey"
 
   tags = {
-    Name = "testserverJD3"
+    Name = "testserverJD4"
 }
 
 #Creating Security Group
 resource "aws_security_group" "WebSrvrSG" {
   name = "WebSrvrSG"
   description = "WebServerSecurityGroup"
-  #vpc_id = "${aws_vpc.mainvpc.id}" #call the VPC here
   
   ingress {
     from_port = 80
