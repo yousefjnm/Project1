@@ -19,7 +19,7 @@ resource "aws_vpc_ipv4_cidr_block_association" "VPC_second_cidr" {
 # Create the Subnets
 resource "aws_subnet" "private_1" {
   vpc_id                  = "${aws_vpc.VPC_Official.id}"
-  cidr_block              = "10.0.10.0/20"
+  cidr_block              = "10.0.0.0/20"
   map_public_ip_on_launch = "true"
   availability_zone       = "us-west-2a"
   tags = {
@@ -71,10 +71,6 @@ tags = {
    Name = "public_3"
   }
  }
-variable "cidr_total" {
-   type = "list"
-   default = ["10.0.16.0/20", "10.0.32.0/20", "10.0.64.0/20", "10.100.0.0/20", "10.100.16.0/20", "10.100.32.0/20" ]
-}
 # Create the Security Group
 resource "aws_security_group" "SG_Official" {
   vpc_id       = "${aws_vpc.VPC_Official.id}"
@@ -99,11 +95,9 @@ tags = {
 # Create VPC Network Access Control List
 resource "aws_network_acl" "ACL_Official" {
   vpc_id       = "${aws_vpc.VPC_Official.id}"
-  count        = "${length(var.cidr_total)}"
-  subnet_ids   = "${element(var.cidr_total, count.index)}"
   ingress {
     protocol   = "tcp"
-    rule_no    = "${100 + count.index}"
+    rule_no    = 100
     action     = "allow"
     cidr_block = "0.0.0.0/0"
     from_port  = 80
@@ -111,7 +105,7 @@ resource "aws_network_acl" "ACL_Official" {
 }
   ingress {
     protocol   = "tcp"
-    rule_no    = "${150 + count.index}"
+    rule_no    = 150
     action     = "allow"
     cidr_block = "0.0.0.0/0"
     from_port  = 443
@@ -119,7 +113,7 @@ resource "aws_network_acl" "ACL_Official" {
 }
  ingress {
    protocol    = "tcp"
-   rule_no     = "${200 + count.index}"
+   rule_no     = 200
    action      = "allow"
    cidr_block  = "0.0.0.0/0"
    from_port   = 22
@@ -127,7 +121,7 @@ resource "aws_network_acl" "ACL_Official" {
 }
  ingress {
    protocol    = "tcp"
-   rule_no     = "${250 + count.index}"
+   rule_no     = 250
    action      = "allow"
    cidr_block  = "0.0.0.0/0"
    from_port   = 1024
@@ -135,7 +129,7 @@ resource "aws_network_acl" "ACL_Official" {
 }
   egress {
     protocol   = "tcp"
-    rule_no    = "${100 + count.index}"
+    rule_no    = 100
     action     = "allow"
     cidr_block = "0.0.0.0/0"
     from_port  = 80
@@ -143,7 +137,7 @@ resource "aws_network_acl" "ACL_Official" {
 }
   egress {
     protocol   = "tcp"
-    rule_no    = "${150 + count.index}"
+    rule_no    = 150
     action     = "allow"
     cidr_block = "0.0.0.0/0"
     from_port  = 443
@@ -151,7 +145,7 @@ resource "aws_network_acl" "ACL_Official" {
 }
  egress {
    protocol    = "tcp"
-   rule_no     = "${200 + count.index}"
+   rule_no     = 200
    action      = "allow"
    cidr_block  = "0.0.0.0/0"
    from_port   = 22
@@ -159,7 +153,7 @@ resource "aws_network_acl" "ACL_Official" {
 }
  egress {
    protocol    = "tcp"
-   rule_no     = "${250 + count.index}"
+   rule_no     = 250
    action      = "allow"
    cidr_block  = "0.0.0.0/0"
    from_port   = 1024
@@ -241,7 +235,7 @@ resource "aws_nat_gateway" "nat-gw" {
   allocation_id = "${aws_eip.elastic-ip-for-nat-gw.id}"
   subnet_id     = "${aws_subnet.public_1.id}"
   tags = {
-    Name = "gw NAT"
+    Name = "nat-gw"
   }
   depends_on = ["aws_eip.elastic-ip-for-nat-gw"]
 }
