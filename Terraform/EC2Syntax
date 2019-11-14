@@ -44,5 +44,12 @@ resource "aws_security_group" "WebSrvrSG" {
     cidr_blocks = ["0.0.0.0/0"]
     description = "Allow All Traffic to port 443"
     }
+    
+   egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+}
      
 }
