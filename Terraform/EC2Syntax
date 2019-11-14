@@ -6,10 +6,9 @@ provider "aws" {
 resource "aws_instance" "WebSrvr" {
   ami           = "ami-06d51e91cea0dac8d"
   instance_type = "t2.micro"
-  subnet_id     = "subnet-07a05bda4b4e7e47a"
+  subnet_id     = "${aws_subnet.private_1.id"}
   security_groups = ["${aws_security_group.WebSrvrSG.id}"]
   associate_public_ip_address  = true
-  availability_zone     = "us-west-2b"
   key_name      = "newInstanceKey"
 
   tags = {
@@ -18,6 +17,7 @@ resource "aws_instance" "WebSrvr" {
 
 #Creating Security Group
 resource "aws_security_group" "WebSrvrSG" {
+  vpc_id  = "${aws_vpc.VPC_Official.id}"
   name = "WebSrvrSG"
   description = "WebServerSecurityGroup"
   
