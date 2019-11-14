@@ -9,28 +9,28 @@ resource "aws_route53_record" "alias_route53_record" {
   type    = "A"
 
   alias {
-    name                   = "${aws_alb.webapp_load_balancer.dns_name}"
+    name                   = "${aws_eip.elastic-ip-for-nat-gw.id}"
     zone_id                = "Z1H1FL5HABSF5"
     evaluate_target_health = true
   }
 }
 
 resource "aws_route53_record" "cname_route53_record" {
-  zone_id = "${aws_route53_zone.git_legion_dev.zone_id}" # Replace with your zone ID
-  name    = "git_legion_dev" # Replace with your subdomain, Note: not valid with "apex" domains, e.g. example.com
+  zone_id = "${aws_route53_zone.git_legion_dev.zone_id}"
+  name    = "_a78c3e516de1506a2eed484bce1dba46.git-legion.dev." # Replace with your subdomain, Note: not valid with "apex" domains, e.g. example.com
   type    = "CNAME"
   ttl     = "60"
-  records = ["${aws_alb.webapp_load_balancer.dns_name}"]
+  records = ["_987969fc5a234fce960168461ba58c10.olprtlswtu.acm-validations.aws"]
 }
 
 
-resource "aws_route53_record" "www" {A
+resource "aws_route53_record" "www" {
   zone_id = "${aws_route53_zone.git_legion_dev.zone_id}"
   name    = "git-legion.dev"
   type    = "A"
 
   alias {
-    name                   = "${aws_alb.webapp_load_balancer.dns_name}"
+    name                   = "${aws_eip.elastic-ip-for-nat-gw.id}"
     zone_id                = "Z1H1FL5HABSF5"
     evaluate_target_health = true
   }
