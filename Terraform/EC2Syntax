@@ -7,6 +7,7 @@ resource "aws_instance" "test" {
   ami           = "ami-06d51e91cea0dac8d"
   instance_type = "t2.micro"
   subnet_id     = "subnet-07a05bda4b4e7e47a"
+  security_groups = ["${aws_security_group.WebSrvrSG.id}"]
   associate_public_ip_address  = true
   availability_zone     = "us-west-2b"
   key_name      = "newInstanceKey"
@@ -15,7 +16,34 @@ resource "aws_instance" "test" {
     Name = "testserverJD3"
 }
 
-  vpc_security_group_ids       = [
-        "sg-09f759592abb95ad6",
-    ]
+#Creating Security Group
+resource "aws_security_group" "WebSrvrSG" {
+  name = "WebSrvrSG"
+  description = "WebServerSecurityGroup"
+  #vpc_id = "${aws_vpc.mainvpc.id}" #call the VPC here
+  
+  ingress {
+    from_port = 80
+    protocol = "tcp"
+    to_port = 80
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow All Traffic to port 80"
+    }
+     
+   ingress {
+    from_port = 443
+    protocol = "tcp"
+    to_port = 443
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow All Traffic to port 443"
+    }
+    
+   ingress {
+    from_port = 22
+    protocol = "tcp"
+    to_port = 22
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow All Traffic to port 443"
+    }
+     
 }
