@@ -7,8 +7,6 @@ terraform {
     }
 }
 
-resource "aws_default_vpc" "default" {}
-
 resource "aws_instance" "bastion" {
   ami                         = "ami-969ab1f6"
   key_name                    = "newInstanceKey"
