@@ -1,20 +1,10 @@
-The ansible
+The following 2 playbooks will configure and install Snipe-IT on the webserver. They should be ran in the following order:
 
+- SnipeitWebSrvSC.yml
+- SnipeitInstall.yml
 
-Command to run ansible playbook
+The first playbook will install the necessary software and configure the webserver.
+The second playbook will Install Snipe-It and generate its database.
 
-ansible-playbook -i a.b.c.d, playbook-hello-world.yml (a.b.c.d -- is a public IP of an instance)
+The playbooks are dependent on the env and snipeit-site.conf to be properly installed. The env is actually a hidden file and will need to be renamed to ".env" otherwise the env file task will not complete. 
 
-If get following error: 
-
-
-TASK [Gathering Facts] ***************************************************************************************************************************************
-fatal: [a.b.c.d]: FAILED! => {"changed": false, "module_stderr": "Shared connection to a.b.c.d closed.\r\n", "module_stdout": "/bin/sh: 1: /usr/local/bin/python3: not found\r\n", "msg": "MODULE FAILURE\nSee stdout/stderr for the exact error", "rc": 127}
-
-
-
-Then run: 
-
-ansible-playbook -i a.b.c.d, -e 'ansible_python_interpreter=/usr/bin/python3' playbook-hello-world.yml
-
-(Just make sure, pythos3 is installed on the mentioned path of the instance, where you are trying to execute the playbook)
