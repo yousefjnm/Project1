@@ -6,7 +6,7 @@ provider "aws" {
 resource "aws_instance" "WebSrvr" {
   ami           = "ami-06d51e91cea0dac8d"
   instance_type = "t2.micro"
-  subnet_id     = "${aws_subnet.private_1.id"}
+  subnet_id     = "${aws_subnet.private_1.id}"
   security_groups = ["${aws_security_group.WebSrvrSG.id}"]
   associate_public_ip_address  = true
   key_name      = "newInstanceKey"
