@@ -8,7 +8,7 @@ resource "aws_alb" "webapp_load_balancer" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = ["${aws_security_group.elb_security_group.id}"]
-  subnets            = ["${aws_subnet.public_1.id}", "${aws_subnet.public_2.id}", "${aws_subnet.public_3.id}"]
+  subnets            = ["${aws_subnet.private_1.id}", "${aws_subnet.public_2.id}", "${aws_subnet.public_3.id}"]
   #subnets            = ["subnet-0272634f5cdc4c886", "subnet-04f078b91b5bd1841"]
   #depends_on         = ["aws_subnet.public_subnets",   "aws_security_group.elb_security_group"]
 
@@ -80,8 +80,8 @@ resource "aws_alb_target_group" "alb_front_http" {
 	protocol = "HTTP"
 	healthy_threshold = 5
 	unhealthy_threshold = 2
-	interval = 5
-	timeout = 4
+	interval = 30
+	timeout = 5
 	matcher = "200"
     }
   tags = {
