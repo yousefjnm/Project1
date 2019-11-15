@@ -15,6 +15,7 @@ resource "aws_instance" "WebSrvr" {
     Name = "testserverJD4"
     Type = "Scheduled"
 }
+}
 
 #Creating Security Group
 resource "aws_security_group" "WebSrvrSG" {
