@@ -33,7 +33,9 @@ The following resources are created in AWS via Terraform files:
         Playbooks are ran using the ansible host file or dynamic inventory (you must make sure to have the host file or dynamic inventory configured). While there is a total of 2 playbooks you can run both by calling the Master.yml file using the following commands:
         
   - $ansible-playbook Master.yml
+  
 Or
+
   - $ansible-playbook SnipeitWebSrvSC.yml
   - $ansible-playbook SnipeitInstall.yml
   
