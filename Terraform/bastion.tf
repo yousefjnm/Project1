@@ -1,17 +1,8 @@
-terraform {
-    backend  "s3" {
-    region         = "us-west-2"
-    bucket         = "gitlegionbucket"
-    key            = "ec2/terraform.tfstate"
-    dynamodb_table = "tf-state-lock"
-    }
-}
-
 resource "aws_instance" "bastion" {
-  ami                         = "ami-969ab1f6"
+  ami                         = "ami-06d51e91cea0dac8d"
   key_name                    = "newInstanceKey"
   instance_type               = "t2.micro"
-  security_groups             = ["${aws_security_group.bastion-sg.id}"]
+  security_groups             = ["${aws_security_group.bastion-sg.name}"]
   associate_public_ip_address = true
 }
 
