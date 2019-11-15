@@ -14,7 +14,7 @@ resource "aws_instance" "WebSrvr" {
   tags = {
     Name = "testserverJD4"
     Type = "Scheduled"
-}
+  }
 }
 
 #Creating Security Group
@@ -52,6 +52,5 @@ resource "aws_security_group" "WebSrvrSG" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
-}
-     
+    }    
 }
