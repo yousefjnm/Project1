@@ -13,6 +13,7 @@ resource "aws_instance" "WebSrvr" {
 
   tags = {
     Name = "testserverJD4"
+    Type = "Scheduled"
 }
 
 #Creating Security Group
