@@ -34,7 +34,7 @@ The following resources are created in AWS via Terraform files:
         
   - $ansible-playbook Master.yml
   
-Or
+or
 
   - $ansible-playbook SnipeitWebSrvSC.yml
   - $ansible-playbook SnipeitInstall.yml
