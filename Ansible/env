@@ -4,7 +4,7 @@
 APP_ENV=production
 APP_DEBUG=false
 APP_KEY=ChangeMe
-APP_URL=18.236.13.162
+APP_URL=https://git-legion.dev
 APP_TIMEZONE='America/Los_Angeles'
 APP_LOCALE=en
 MAX_RESULTS=500
