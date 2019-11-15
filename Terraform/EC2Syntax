@@ -12,7 +12,7 @@ resource "aws_instance" "WebSrvr" {
   key_name      = "newInstanceKey"
 
   tags = {
-    Name = "testserverJD4"
+    Name = "WebServer"
     Type = "Scheduled"
   }
 }
