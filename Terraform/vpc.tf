@@ -95,6 +95,7 @@ tags = {
 # Create VPC Network Access Control List
 resource "aws_network_acl" "ACL_Official" {
   vpc_id       = "${aws_vpc.VPC_Official.id}"
+  subnet_ids   = [ "${aws_subnet.private_1.id}" ]
   ingress {
     protocol   = "tcp"
     rule_no    = 100
