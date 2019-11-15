@@ -4,7 +4,10 @@ resource "aws_instance" "bastion" {
   instance_type               = "t2.micro"
   security_groups             = ["${aws_security_group.bastion-sg.name}"]
   associate_public_ip_address = true
-}
+  tags = {
+  Type = "Scheduled"
+  }
+ }
 
 resource "aws_security_group" "bastion-sg" {
   name   = "bastion-security-group"
