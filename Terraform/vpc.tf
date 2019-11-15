@@ -1,6 +1,4 @@
-provider "aws" {
-  region = "us-west-2"
-}
+
 # Create the VPC
 resource "aws_vpc" "VPC_Official" {
   cidr_block           = "10.0.0.0/16"
