@@ -17,7 +17,7 @@ resource "aws_vpc_ipv4_cidr_block_association" "VPC_second_cidr" {
 resource "aws_subnet" "private_1" {
   vpc_id                  = "${aws_vpc.VPC_Official.id}"
   cidr_block              = "10.0.0.0/20"
-  map_public_ip_on_launch = "true"
+  map_public_ip_on_launch = "false"
   availability_zone       = "us-west-2a"
   tags = {
     Name = "private_1"
@@ -26,7 +26,7 @@ resource "aws_subnet" "private_1" {
 resource "aws_subnet" "private_2" {
   vpc_id                  = "${aws_vpc.VPC_Official.id}"
   cidr_block              = "10.0.32.0/20"
-  map_public_ip_on_launch = "true"
+  map_public_ip_on_launch = "false"
   availability_zone       = "us-west-2b"
 tags = {
    Name = "private_2"
@@ -35,7 +35,7 @@ tags = {
 resource "aws_subnet" "private_3" {
   vpc_id                  = "${aws_vpc.VPC_Official.id}"
   cidr_block              = "10.0.64.0/20"
-  map_public_ip_on_launch = "true"
+  map_public_ip_on_launch = "false"
   availability_zone       = "us-west-2c"
 tags = {
    Name = "private_3"
