@@ -7,6 +7,8 @@ The following 2 playbooks will configure and install Snipe-IT on the webserver. 
 
 The playbooks can be ran all together by instead calling the Master.yml file.
 
+Note: once you have cloned the repo or copied the files make sure to rename the env file to .env
+
 # Playbook processes
 
 The first playbook will install the necessary software and configure the webserver.
