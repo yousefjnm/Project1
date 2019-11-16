@@ -1,4 +1,3 @@
-
 # Create the VPC
 resource "aws_vpc" "VPC_Official" {
   cidr_block           = "10.0.0.0/16"
@@ -233,7 +232,7 @@ resource "aws_route_table_association" "My_VPC_Association23" {
     subnet_id      = "${aws_subnet.public_3.id}"
     route_table_id = "${aws_route_table.Route_Table2.id}"
 }
-#Create EIP to be Associated with the NAT GW
+#Create EIP to be Associated with the NAT Gateway
 resource "aws_eip" "elastic-ip-for-nat-gw" {
     vpc = true
     associate_with_private_ip = "10.0.10.0"
