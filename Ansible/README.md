@@ -9,7 +9,7 @@ The playbooks can be ran all together by instead calling the Master.yml file.
 
 Note: once you have cloned the repo or copied the files make sure to rename the env file to .env
 
-# Playbook processes
+# Playbook Processes
 
 The first playbook will install the necessary software and configure the webserver.
 The second playbook will Install Snipe-It and generate its database.
