@@ -3,17 +3,6 @@ name          = "git-legion.dev."
 #force_destroy = false
 }
 
-resource "aws_route53_record" "alias_route53_record" {
-  zone_id = "${aws_route53_zone.git_legion_dev.zone_id}" # Replace with your zone ID
-  name    = "git-legion.dev" # Replace with your name/domain/subdomain
-  type    = "A"
-
-  alias {
-    name                   = "${aws_eip.elastic-ip-for-nat-gw.id}"
-    zone_id                = "Z1H1FL5HABSF5"
-    evaluate_target_health = true
-  }
-}
 
 resource "aws_route53_record" "cname_route53_record" {
   zone_id = "${aws_route53_zone.git_legion_dev.zone_id}"
@@ -38,8 +27,20 @@ resource "aws_route53_record" "www" {
   type    = "A"
 
   alias {
-    name                   = "${aws_eip.elastic-ip-for-nat-gw.id}"
-    zone_id                = "Z1H1FL5HABSF5"
+    name                   = "${aws_alb.webapp_load_balancer.dns_name}"
+    zone_id                = "${aws_alb.webapp_load_balancer.zone_id}"
+    evaluate_target_health = true
+  }
+}
+
+resource "aws_route53_record" "real_www" {
+  zone_id = "${aws_route53_zone.git_legion_dev.zone_id}"
+  name    = "www.git-legion.dev"
+  type    = "A"
+
+  alias {
+    name                   = "${aws_alb.webapp_load_balancer.dns_name}"
+    zone_id                = "${aws_alb.webapp_load_balancer.zone_id}"
     evaluate_target_health = true
   }
 }
