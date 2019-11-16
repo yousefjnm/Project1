@@ -118,6 +118,11 @@ resource "aws_lb_listener" "front_end" {
   }
 }
 
+resource "aws_lb_listener_certificate" "example" {
+  listener_arn    = "${aws_lb_listener.front_end.arn}"
+  certificate_arn = "arn:aws:acm:us-west-2:342283246872:certificate/ee6ed6af-c696-4bc7-bda8-7364e1e9f589"
+}
+
 
 
 
