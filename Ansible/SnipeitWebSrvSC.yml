@@ -94,3 +94,13 @@
                   login_password: "AssetMan"
                   login_unix_socket: /var/run/mysqld/mysqld.sock
                   state: absent
+                    
+          - name: Activating SSL
+            become: yes
+            command: a2enmod ssl
+
+          - name: Restart apache2
+            become: yes
+            service:
+                 name: apache2
+                 state: restarted
