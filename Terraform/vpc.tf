@@ -1,3 +1,4 @@
+# Vpc.tf Official Code
 # Create the VPC
 resource "aws_vpc" "VPC_Official" {
   cidr_block           = "10.0.0.0/16"
