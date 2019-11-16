@@ -9,6 +9,8 @@ resource "aws_alb" "webapp_load_balancer" {
   load_balancer_type = "application"
   security_groups    = ["${aws_security_group.elb_security_group.id}"]
   subnets            = ["${aws_subnet.private_1.id}", "${aws_subnet.public_2.id}", "${aws_subnet.public_3.id}"]
+  #subnets            = ["subnet-0272634f5cdc4c886", "subnet-04f078b91b5bd1841"]
+  #depends_on         = ["aws_subnet.public_subnets",   "aws_security_group.elb_security_group"]
 
   enable_deletion_protection = true
 
@@ -95,7 +97,15 @@ resource "aws_alb_target_group_attachment" "targetgroup_alb" {
   target_group_arn = "${aws_alb_target_group.alb_front_http.arn}"
   #count = "${length(var.public_subnet_cidr)}"
   port = 80
-  target_id = "${aws_instance.WebSrvr.id}"   ###This is the EC2 
+  target_id = "${aws_instance.WebSrvr1.id}"   ###This is the EC2 
+  #target_id = "i-007d4f45a6587495e"   ###This is the EC2 ${aws_instance.test.id}
+}
+
+resource "aws_alb_target_group_attachment" "targetgroup_alb2" {
+  target_group_arn = "${aws_alb_target_group.alb_front_http.arn}"
+  #count = "${length(var.public_subnet_cidr)}"
+  port = 80
+  target_id = "${aws_instance.WebSrvr2.id}"   ###This is the EC2 
   #target_id = "i-007d4f45a6587495e"   ###This is the EC2 ${aws_instance.test.id}
 }
 
@@ -140,3 +150,4 @@ resource "aws_lb_listener" "front_end2" {
   }
   depends_on = ["aws_alb.webapp_load_balancer", "aws_alb_target_group.alb_front_http"]
 }
+
