@@ -2,7 +2,8 @@ resource "aws_instance" "bastion" {
   ami                         = "ami-06d51e91cea0dac8d"
   key_name                    = "newInstanceKey"
   instance_type               = "t2.micro"
-  security_groups             = ["${aws_security_group.bastion-sg.name}"]
+  subnet_id     = "${aws_subnet.private_1.id}"
+  security_groups             = ["${aws_security_group.bastion-sg.id}"]
   associate_public_ip_address = true
   tags = {
   Type = "Scheduled"
@@ -26,9 +27,4 @@ resource "aws_security_group" "bastion-sg" {
     to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
-}
-
-
-output "bastion_public_ip" {
-  value = "${aws_instance.bastion.public_ip}"
 }
